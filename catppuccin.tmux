@@ -27,37 +27,33 @@ setw() {
 }
 
 main() {
-  local theme
-  theme="$(get_tmux_option "@catppuccin_flavour" "mocha")"
-
   # Aggregate all commands in one array
   local tmux_commands=()
 
   # NOTE: Pulling in the selected theme by the theme that's being set as local
   # variables.
   # shellcheck source=catppuccin-frappe.tmuxtheme
-  source /dev/stdin <<<"$(sed -e "/^[^#].*=/s/^/local /" "${PLUGIN_DIR}/catppuccin-${theme}.tmuxtheme")"
+  source /dev/stdin <<<"$(sed -e "/^[^#].*=/s/^/local /" "${PLUGIN_DIR}/red-tmux.tmuxtheme")"
 
   # status
   set status "on"
-  set status-bg "${thm_transparent}"
+  set status-style bg="${thm_default}"
   set status-justify "left"
   set status-left-length "100"
   set status-right-length "100"
 
   # messages
-  set message-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
-  set message-command-style "fg=${thm_cyan},bg=${thm_gray},align=centre"
+  set message-style "fg=${thm_white},bg=${thm_default},align=centre"
+  set message-command-style "fg=${thm_white},bg=${thm_default},align=centre"
 
   # panes
-  set pane-border-style "fg=${thm_gray}"
-  set pane-active-border-style "fg=${thm_blue}"
+  set pane-border-style "fg=${thm_black}"
+  set pane-active-border-style "fg=${thm_red}"
 
   # windows
-  setw window-status-activity-style "fg=${thm_fg},bg=${thm_transparent},none"
+  setw window-status-activity-style "fg=${thm_fg},bg=${thm_default},none"
   setw window-status-separator ""
-  setw window-status-style "fg=${thm_fg},bg=${thm_transparent},none"
-  setw window-status-style "fg=${thm_fg},bg=${thm_transparent},none"
+  setw window-status-style "fg=${thm_fg},bg=${thm_default},none"
 
   # --------=== Statusline
 
@@ -78,7 +74,7 @@ main() {
   user="$(get_tmux_option "@catppuccin_user" "off")"
   readonly user
 
-  local host
+  localhost
   host="$(get_tmux_option "@catppuccin_host" "off")"
   readonly host
 
@@ -88,38 +84,36 @@ main() {
 
   # These variables are the defaults so that the setw and set calls are easier to parse.
   local show_directory
-  readonly show_directory="#[fg=$thm_pink,bg=$thm_transparent,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_transparent,bg=$thm_pink,nobold,nounderscore,noitalics]  #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_red]"
+  readonly show_directory="#[fg=$thm_pink,bg=$thm_default,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_default,bg=$thm_pink,nobold,nounderscore,noitalics]  #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_red]"
 
   local show_window
-  readonly show_window="#[fg=$thm_pink,bg=$thm_transparent,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_transparent,bg=$thm_pink,nobold,nounderscore,noitalics] #[fg=$thm_fg,bg=$thm_gray] #W #{?client_prefix,#[fg=$thm_red]"
+  readonly show_window="#[fg=$thm_red,bg=$thm_default,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_black,bg=$thm_red,nobold,nounderscore,noitalics] #[fg=$thm_white,bg=$thm_default] #W #{?client_prefix,#[fg=$thm_red]"
 
   local show_session
-  readonly show_session="#[fg=$thm_green]}#[bg=$thm_gray]$right_separator#{?client_prefix,#[bg=$thm_red],#[bg=$thm_green]}#[fg=$thm_transparent] #[fg=$thm_fg,bg=$thm_gray] #S "
+  readonly show_session="#[fg=$thm_red]}#[bg=$thm_default]$right_separator#{?client_prefix,#[bg=$thm_red],#[bg=$thm_red]}#[fg=$thm_black] #[fg=$thm_white,bg=$thm_default] #S "
 
   local show_directory_in_window_status
-  #readonly show_directory_in_window_status="#[fg=$thm_transparent,bg=$thm_blue] #I #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} "
-  readonly show_directory_in_window_status="#[fg=$thm_transparent,bg=$thm_blue] #I #[fg=$thm_fg,bg=$thm_gray] #W "
+  readonly show_directory_in_window_status="#[fg=$thm_black,bg=$thm_red] #I #[fg=$thm_white,bg=$thm_default]"
 
   local show_directory_in_window_status_current
-  #readonly show_directory_in_window_status_current="#[fg=$thm_transparent,bg=$thm_orange] #I #[fg=$thm_fg,bg=$thm_transparent] #{b:pane_current_path} "
-  readonly show_directory_in_window_status_current="#[fg=colour232,bg=$thm_orange] #I #[fg=colour255,bg=colour237] #(echo '#{pane_current_path}' | rev | cut -d'/' -f-2 | rev) "
+  readonly show_directory_in_window_status_current="#[fg=$thm_white,bg=$thm_red] #I #[fg=$thm_white,bg=$thm_default] #(echo '#{pane_current_path}' | rev | cut -d '/' -f -3 | rev) "
 
   local show_window_in_window_status
-  readonly show_window_in_window_status="#[fg=$thm_fg,bg=$thm_transparent] #W #[fg=$thm_transparent,bg=$thm_blue] #I#[fg=$thm_blue,bg=$thm_transparent]$left_separator#[fg=$thm_fg,bg=$thm_transparent,nobold,nounderscore,noitalics] "
+  readonly show_window_in_window_status="#[fg=$thm_whitebg=$thm_red] #W #[fg=$thm_white,bg=$thm_red] #I#[fg=$thm_whit,bg=$thm_red]$left_separator#[fg=$thm_fg,bg=$thm_default,nobold,nounderscore,noitalics] "
 
   local show_window_in_window_status_current
-  readonly show_window_in_window_status_current="#[fg=$thm_fg,bg=$thm_gray] #W #[fg=$thm_transparent,bg=$thm_orange] #I#[fg=$thm_orange,bg=$thm_transparent]$left_separator#[fg=$thm_fg,bg=$thm_transparent,nobold,nounderscore,noitalics] "
+  readonly show_window_in_window_status_current="#[fg=$thm_fg,bg=$thm_gray] #W #[fg=$thm_default,bg=$thm_orange] #I#[fg=$thm_orange,bg=$thm_default]$left_separator#[fg=$thm_fg,bg=$thm_default,nobold,nounderscore,noitalics] "
  #setw -g window-status-current-format "#[fg=colour232,bg=$thm_orange] #I #[fg=colour255,bg=colour237] #(echo '#{pane_current_path}' | rev | cut -d'/' -f-2 | rev) "
 
 
   local show_user
-  readonly show_user="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_transparent,bg=$thm_blue] #[fg=$thm_fg,bg=$thm_gray] #(whoami) "
+  readonly show_user="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_default,bg=$thm_blue] #[fg=$thm_fg,bg=$thm_gray] #(whoami) "
 
   local show_host
-  readonly show_host="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_transparent,bg=$thm_blue]󰒋 #[fg=$thm_fg,bg=$thm_gray] #H "
+  readonly show_host="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_default,bg=$thm_blue]󰒋 #[fg=$thm_fg,bg=$thm_gray] #H "
 
   local show_date_time
-  readonly show_date_time="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_transparent,bg=$thm_blue] #[fg=$thm_fg,bg=$thm_gray] $date_time "
+  readonly show_date_time="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_default,bg=$thm_blue] #[fg=$thm_fg,bg=$thm_gray] $date_time "
 
   # Right column 1 by default shows the Window name.
   local right_column1=$show_window
